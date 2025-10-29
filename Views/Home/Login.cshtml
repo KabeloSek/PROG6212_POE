@@ -1,6 +1,47 @@
-﻿@{
-    ViewData["Title"] = "Privacy Policy";
-}
-<h1>@ViewData["Title"]</h1>
+﻿@model PROG6212_POE.Models.Login
 
-<p>Use this page to detail your site's privacy policy.</p>
+<title>Login - Monthly Claim System</title>
+<link rel="stylesheet" href="/css/login.css" />
+
+<div class="wel">
+    <h1>Welcome Back</h1>
+    <p>Please enter your credentials to Login</p>
+</div>
+
+<form asp-action="Login" method="post" class="form-container">
+
+    <div class="form-group">
+        <label>Email:</label>
+        <input type="email" asp-for="email" placeholder="Enter Email" />
+        <span asp-validation-for="email"/>
+    </div>
+
+    <div class="form-group">
+        <label>Password:</label>
+        <input type="password" asp-for="password" placeholder="Enter Password" />
+        <span asp-validation-for="password" />
+    </div>
+
+    <div class="form-group">
+        <label>Role:</label>
+        <select asp-for="role">
+            <option value="Lecturer">Lecturer</option>
+            <option value="ProgramManager">Program Manager</option>
+            <option value="ProgramCoordinator">Program Coordinator</option>
+        </select>
+        <span asp-validation-for="role" />
+    </div>
+
+    <button type="submit" class="btn">Login</button>
+
+    @if(ViewBag.ErrorMessage != null)
+    {  
+           <p style="color:red;"> @ViewBag.ErrorMessage</p>
+    }
+</form>
+
+        <div class="register-prompt">
+            <p>
+            Don't have an account? <a asp-controller="Home" asp-action="Register">Register here</a>.
+            </p>
+        </div>

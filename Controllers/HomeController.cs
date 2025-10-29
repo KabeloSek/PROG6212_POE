@@ -57,10 +57,47 @@ namespace PROG6212_POE.Controllers
             }
             return View(user);
         }
-
         public IActionResult Login()
         {
             return View();
+        }
+        [HttpPost]
+        public IActionResult Login(Login user)
+        {
+            if (ModelState.IsValid)
+            {
+                Login login = new Login();
+                
+                bool isValidUser = login.getUser(user.email, user.password, user.role);
+                if (isValidUser) 
+                {
+                    switch (user.role.ToLower())
+                    {
+                        case "lecturer":
+                            return RedirectToAction("HomePage", "Home");
+                      
+
+                        case "programcoordinator":
+                            return RedirectToAction("PCPage", "Home");
+                        
+                            
+                        case "programmanager":
+                            return RedirectToAction("PMPage", "Home");
+         
+                        default:
+                            Console.WriteLine("Invalid role specified.");
+                            return RedirectToAction("Login", "Home");
+
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("User not found or invalid credentials.");
+                }
+
+            }
+            ViewBag.ErrorMessage = "Login unsuccessful! Incorrect Email, Password or Role.";
+            return View(user);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
