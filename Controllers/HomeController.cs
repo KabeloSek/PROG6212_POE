@@ -16,6 +16,12 @@ namespace PROG6212_POE.Controllers
         [HttpGet]
         public IActionResult Register()
         {
+            //create an instance of the Claims_Queries model 
+            Claims_Queries claims = new Claims_Queries();
+
+            //call the method to create claims table it is needed to create user tables because they have claimID as foreign key
+            claims.CreateClaimsTable();
+
             // Create an instance of the Register model
             Register register = new Register();
 
