@@ -1,0 +1,50 @@
+﻿@model PROG6212_POE.Models.Claims_Queries
+
+<title>ClaimPage - Monthly Claim System</title>
+
+<link rel="stylesheet" href="/css/claimPage.css" />
+
+<div class="claim-page">
+    <h1>Claim Details</h1>
+    <p>Ensure that details are correct</p>
+</div>
+<form asp-action="ClaimPage" method="post" enctype="multipart/form-data" class="claim-form">
+    <div class="form-group">
+        <label>Name:</label>
+        <input type="text" asp-for="name" placeholder="Enter your name" />
+        <span asp-validation-for="name"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Sessions:</label>
+        <input type="number" asp-for="sessions" placeholder="Enter number of sessions" step="1" />
+        <span asp-validation-for="sessions"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Hours Worked:</label>
+        <input type="number" asp-for="hoursWorked" placeholder="Amount of hours worked" step="1"/>
+        <span asp-validation-for="hoursWorked"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Hourly Rate:</label>
+        <input type="number" asp-for="hourlyRate" placeholder="Enter Hourly Rate " step="1"/>
+        <span asp-validation-for="hourlyRate"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Upload Supporting Documents:</label>
+        <input type="file" asp-for="document" name="documentFile" />
+        <span asp-validation-for="document"></span>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="claim-btn">Submit</button>
+        
+    </div>
+    @if (ViewBag.SuccessMessage != null)
+    {
+        <p style="color:green;">@ViewBag.SuccessMessage</p>
+    }
+</form>

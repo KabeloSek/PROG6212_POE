@@ -1,0 +1,54 @@
+﻿/* Claims table styling */
+.claims-table {
+    width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+    /* Table header */
+    .claims-table th {
+        background-color: red;
+        color: white;
+        text-align: center;
+        padding: 10px;
+    }
+
+    /* Table cells */
+    .claims-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+
+    /* Alternate row colors */
+    .claims-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .claims-table tr:nth-child(odd) {
+        background-color: #ffffff;
+    }
+
+    /* Hover effect */
+    .claims-table tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    /* Links */
+    .claims-table a {
+        color: red;
+        text-decoration: none;
+    }
+
+        .claims-table a:hover {
+            text-decoration: underline;
+        }
+
+    /* Dropdown */
+    .claims-table select {
+        padding: 5px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }

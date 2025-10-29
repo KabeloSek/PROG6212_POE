@@ -1,0 +1,63 @@
+﻿/* Claim page wrapper */
+.claim-page {
+    text-align: center;
+    padding: 20px;
+}
+
+    /* Title */
+    .claim-page h1 {
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+
+    .claim-page p {
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+/* Form layout */
+.claim-form {
+    width: 400px;
+    margin: 0 auto; /* Center horizontally */
+    text-align: left;
+}
+
+/* Form groups */
+.form-group {
+    margin-bottom: 15px;
+ 
+}
+
+    /* Labels */
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    /* Inputs */
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group input[type="file"] {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+/* Submit button */
+.claim-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+    .claim-btn:hover {
+        background-color: darkred;
+    }

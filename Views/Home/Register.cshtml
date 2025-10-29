@@ -51,13 +51,11 @@
     {  
            <p style="color:red;"> @ViewBag.ErrorMessage</p>
     }
-    else
+
+    @if (ViewBag.SuccessMessage != null)
     {
-        
-           <p style="color:green;"> @ViewBag.SuccessMessage </p>
-       
+        <p style="color:green;">@ViewBag.SuccessMessage</p>
     }
-    
 </form>
 
         <div class="login-prompt">

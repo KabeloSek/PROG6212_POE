@@ -37,7 +37,7 @@ namespace PROG6212_POE.Models
                                             Password VARCHAR(75) NOT NULL,
                                             Role VARCHAR(50) NOT NULL,
                                             ClaimID INT,
-                                            FOREIGN KEY (ClaimID) REFERENCES Claim(ClaimID)
+                                            FOREIGN KEY (ClaimID) REFERENCES Claims(ClaimID)
                                            );
                                             END";
 
@@ -52,7 +52,7 @@ namespace PROG6212_POE.Models
                                         Password VARCHAR(75) NOT NULL,
                                         Role VARCHAR(50) NOT NULL,
                                         ClaimID INT,
-                                        FOREIGN KEY (ClaimID) REFERENCES Claim(ClaimID)
+                                        FOREIGN KEY (ClaimID) REFERENCES Claims(ClaimID)
                                        );
                                         END";
                     //SQL query to create PM table
@@ -66,7 +66,7 @@ namespace PROG6212_POE.Models
                                         Password VARCHAR(75) NOT NULL,
                                         Role VARCHAR(50) NOT NULL,
                                         ClaimID INT,
-                                        FOREIGN KEY (ClaimID) REFERENCES Claim(ClaimID)
+                                        FOREIGN KEY (ClaimID) REFERENCES Claims(ClaimID)
                                        );
                                         END";
 
@@ -133,9 +133,9 @@ namespace PROG6212_POE.Models
                 {
                     connect.Open();
                     //SQL query to insert lecturer data into Lecturer table
-                    string insertLecturer = @"INSERT INTO Lecturer
+                    string insertLecturer = @"INSERT INTO Lecturer (Name, Surname, Email, Password, Role)
                                                 VALUES
-                                                ('"+name+"','"+surname+"','"+email+"','"+password+"','"+role+"');";
+                                                ('" + name+"', '"+surname+"','"+email+"','"+password+"','"+role+"');";
 
                     //using command to execute insertLecturer query
                     using (SqlCommand insert = new SqlCommand(insertLecturer, connect))
@@ -167,7 +167,7 @@ namespace PROG6212_POE.Models
                 {
                     connect.Open();
                     //SQL query to insert PC data into PC table
-                    string insertPC = @"INSERT INTO PC
+                    string insertPC = @"INSERT INTO PC (Name, Surname, Email, Password, Role)
                                                 VALUES
                                                 ('" + name + "','" + surname + "','" + email + "','" + password + "','" + role + "');";
                     //using command to execute insertPC query
@@ -200,7 +200,7 @@ namespace PROG6212_POE.Models
                 {
                     connect.Open();
                     //SQL query to insert PM data into PM table
-                    string insertPM = @"INSERT INTO PM
+                    string insertPM = @"INSERT INTO PM (Name, Surname, Email, Password, Role)
                                                 VALUES
                                                 ('" + name + "','" + surname + "','" + email + "','" + password + "','" + role + "');";
                     //using command to execute insertPM query

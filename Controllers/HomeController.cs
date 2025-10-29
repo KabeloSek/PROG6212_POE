@@ -1,6 +1,8 @@
-using System.Diagnostics;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using PROG6212_POE.Models;
+using System.Diagnostics;
+using System.Security.Claims;
 
 namespace PROG6212_POE.Controllers
 {
@@ -36,33 +38,46 @@ namespace PROG6212_POE.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Create an instance of the Register model
-                Register register = new Register();
-
-                //check the role entered by the user and call the appropriate method to insert data
-                switch (user.role.ToLower())
+                try
                 {
-                    case "lecturer":
-                        register.storeLecturer(user.name, user.surname, user.email, user.password, user.role);
-                    break;
+                    // Create an instance of the Register model
+                    Register register = new Register();
 
-                    case "programmanager":
-                        register.storePM(user.name, user.surname, user.email, user.password, user.role);
-                    break;
+                    //check the role entered by the user and call the appropriate method to insert data
+                    switch (user.role.ToLower())
+                    {
+                        case "lecturer":
+                            register.storeLecturer(user.name, user.surname, user.email, user.password, user.role);
+                            ViewBag.SuccessMessage = "Registration successful!";
+                            break;
 
-                    case "programcoordinator":
-                        register.storePC(user.name, user.surname, user.email, user.password, user.role);
-                    break;
+                        case "programmanager":
+                            register.storePM(user.name, user.surname, user.email, user.password, user.role);
+                            ViewBag.SuccessMessage = "Registration successful!";
+                            break;
 
-                    default:
-                        ModelState.AddModelError("role", "Invalid role. ");
-                    break;
+                        case "programcoordinator":
+                            register.storePC(user.name, user.surname, user.email, user.password, user.role);
+                            ViewBag.SuccessMessage = "Registration successful!";
+                            break;
+
+                        default:
+                            Console.WriteLine("role", "Invalid role. ");
+                            break;
+                    }
                 }
-                ViewBag.SuccessMessage = "Registration successful!";
-                ViewBag.ErrorMessage = "Registration unsuccessful!";
+                catch (Exception error)
+                {
+                    Console.WriteLine("Error during registration." + error.Message);
+                    ViewBag.ErrorMessage = "Registration unsuccessful!";
+                    ViewBag.SuccessMessage = null;
+                }
+                
+                
             }
             return View(user);
         }
+        [HttpGet]
         public IActionResult Login()
         {
             return View();
@@ -84,11 +99,11 @@ namespace PROG6212_POE.Controllers
                       
 
                         case "programcoordinator":
-                            return RedirectToAction("PCPage", "Home");
+                            return RedirectToAction("Review", "Home");
                         
                             
                         case "programmanager":
-                            return RedirectToAction("PMPage", "Home");
+                            return RedirectToAction("Approve", "Home");
          
                         default:
                             Console.WriteLine("Invalid role specified.");
@@ -104,6 +119,48 @@ namespace PROG6212_POE.Controllers
             }
             ViewBag.ErrorMessage = "Login unsuccessful! Incorrect Email, Password or Role.";
             return View(user);
+        }
+        public IActionResult HomePage()
+        {
+            return View();
+        }
+        [HttpGet]
+        public IActionResult ClaimPage()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult ClaimPage(Claims_Queries claim, IFormFile documentFile)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    if (documentFile != null && documentFile.Length > 0)
+                    {
+                        claim.document = documentFile.FileName;
+                    }
+                    else
+                    {
+                        claim.document = "No document uploaded";
+                    }
+                    claim.storeClaim( claim.name, claim.sessions, claim.hoursWorked, claim.hourlyRate, claim.document);
+                    Console.WriteLine("Claim submitted successfully.");
+                    ViewBag.Message = "Claim submitted successfully.";
+
+                }catch(Exception error)
+                {
+                    Console.WriteLine("Unable to submit claim" + error.Message);
+                }
+            }
+            return View(claim);
+        }
+
+        public IActionResult ReviewPage()
+        {
+            Claims_Queries claim = new Claims_Queries();
+            List<Claims_Queries> claims = claim.GetAllClaims();
+            return View(claims);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

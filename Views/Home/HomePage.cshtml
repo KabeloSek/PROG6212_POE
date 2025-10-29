@@ -1,0 +1,29 @@
+﻿<title>HomePage - Monthly Claim System</title>
+
+<link rel="stylesheet" href="~/css/homePage.css" />
+
+<h1>Welcome To the home page</h1>
+
+<p>There will be 3 different vies in this web application, and each view can be accessed depednig on your role</p>
+
+
+<div class="role-card">
+    <h2>Lecturer</h2>
+    <p>Lecturers can access:</p>
+
+    <a href="@Url.Action("ClaimPage", "Home")">Claim</a>
+    <a href="@Url.Action("TrackClaim", "Home")">Track Claim</a>
+</div>
+
+<div class="role-card">
+    <h2>Programme Coordinator</h2>
+    <p>Programme coordinator can access:</p>
+    <a href="@Url.Action("ReviewPage", "Home")">Review Claim</a>
+</div>
+
+<div class="role-card">
+    <h2>Programme Manager</h2>
+    <p>Programme manager can access:</p>
+    <a href="@Url.Action("Approve", "Home")">Approve Claim</a>
+</div>
+
