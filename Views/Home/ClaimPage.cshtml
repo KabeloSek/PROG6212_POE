@@ -45,6 +45,8 @@
     </div>
     @if (ViewBag.SuccessMessage != null)
     {
-        <p style="color:green;">@ViewBag.SuccessMessage</p>
+        <p style="color:@(ViewBag.Message.Contains("successfully") ? "green":"red");">
+        @ViewBag.Message
+        </p>
     }
 </form>

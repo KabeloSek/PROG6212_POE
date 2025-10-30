@@ -35,9 +35,7 @@ namespace PROG6212_POE.Models
                                             Surname VARCHAR(50) NOT NULL,
                                             Email VARCHAR(100) NOT NULL UNIQUE,
                                             Password VARCHAR(75) NOT NULL,
-                                            Role VARCHAR(50) NOT NULL,
-                                            ClaimID INT,
-                                            FOREIGN KEY (ClaimID) REFERENCES Claims(ClaimID)
+                                            Role VARCHAR(50) NOT NULL
                                            );
                                             END";
 
@@ -50,9 +48,7 @@ namespace PROG6212_POE.Models
                                         Surname VARCHAR(50) NOT NULL,
                                         Email VARCHAR(100) NOT NULL UNIQUE,
                                         Password VARCHAR(75) NOT NULL,
-                                        Role VARCHAR(50) NOT NULL,
-                                        ClaimID INT,
-                                        FOREIGN KEY (ClaimID) REFERENCES Claims(ClaimID)
+                                        Role VARCHAR(50) NOT NULL
                                        );
                                         END";
                     //SQL query to create PM table
@@ -64,9 +60,7 @@ namespace PROG6212_POE.Models
                                         Surname VARCHAR(50) NOT NULL,
                                         Email VARCHAR(100) NOT NULL UNIQUE,
                                         Password VARCHAR(75) NOT NULL,
-                                        Role VARCHAR(50) NOT NULL,
-                                        ClaimID INT,
-                                        FOREIGN KEY (ClaimID) REFERENCES Claims(ClaimID)
+                                        Role VARCHAR(50) NOT NULL
                                        );
                                         END";
 
