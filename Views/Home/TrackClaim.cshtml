@@ -1,0 +1,46 @@
+﻿@model List<PROG6212_POE.Models.Claims_Queries>
+<link rel="stylesheet" href="/css/reviewPage.css" />
+
+@if (Model == null || !Model.Any())
+{
+    <p>No claims found.</p>
+}
+else
+{
+    <table class="claims-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Sessions</th>
+                <th>Hours Worked</th>
+                <th>Hourly Rate</th>
+                <th>TotalAmount</th>
+                <th>Document</th>
+                <th>Claim Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var claim in Model)
+            {
+                <tr>
+                    <td>@claim.name</td>
+                    <td>@claim.sessions</td>
+                    <td>@claim.hoursWorked</td>
+                    <td>@claim.hourlyRate</td>
+                    <td>@claim.totalAmount</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(claim.document))
+                        {
+                            <a href="@Url.Content("~/uploads/" + claim.document)" target="_blank">View</a>
+                        }
+                        else
+                        {
+                            <span>No document</span>
+                        }
+                    </td>
+                    <td>@claim.claimStatus</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

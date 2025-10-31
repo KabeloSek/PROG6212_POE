@@ -1,0 +1,76 @@
+﻿@model List<PROG6212_POE.Models.Claims_Queries>
+
+<link rel="stylesheet" href="/css/reviewPage.css" />
+
+@if (Model == null)
+{
+    <p>Model is null</p>
+}
+else if (!Model.Any())
+{
+    <p>No claims found</p>
+}
+else
+{
+    <form asp-action="UpdateClaimStatus" method="post">
+    <table class="claims-table">
+        <thead>
+            <tr>
+                <th>ClaimID</th>
+                <th>Name</th>
+                <th>Sessions</th>
+                <th>Hours Worked</th>
+                <th>Hourly Rate</th>
+                <th>Total Amount</th>
+                <th>Document</th>
+                <th>PC Decisison</th>
+                <th>Final Decision</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i=0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Model[i].claimID
+                        <input type="hidden" name="claims[@i].claimID" value="@Model[i].claimID" />
+                    </td>
+                    <td>
+                        @Model[i].name
+                    </td>
+                    <td>
+                        @Model[i].sessions
+                    </td>
+                    <td>
+                        @Model[i].hoursWorked
+                    </td>
+                    <td>
+                        @Model[i].hourlyRate
+                    </td>
+
+                    <td>
+                        @if (!string.IsNullOrEmpty(Model[i].document))
+                        {
+                            <a href="@Url.Content("~/uploads/" + Model[i].document)" target="_blank">View Document</a>
+                        }
+                        else
+                        {
+                            <span>No document</span>
+                        }
+                    </td>
+                    <td>@Model[i].claimStatus</td>
+                    <td>
+                        <select name="claims[@i].claimStatus">
+                            <option value="Approved" selected="@("Approved" == Model[i].claimStatus)">Approve</option>
+                            <option value="Rejected" selected="@("Rejected" == Model[i].claimStatus)">Reject</option>
+                        </select>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+        <div class="save-prompt">
+            <button type="submit">Submit All</button>
+        </div>
+    </form>
+}

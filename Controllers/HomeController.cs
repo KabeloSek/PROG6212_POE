@@ -127,75 +127,138 @@ namespace PROG6212_POE.Controllers
         {
             return View();
         }
+
         [HttpGet]
         public IActionResult ClaimPage()
         {
-            return View();
+
+            return View(); 
         }
         [HttpPost]
         public IActionResult ClaimPage(Claims_Queries claim, IFormFile documentFile)
         {
-            int? lecturerID = HttpContext.Session.GetInt32("LecturerID");
-            if (lecturerID == null)
-                return RedirectToAction("Login", "Home");
-
-            if (ModelState.IsValid)
+            try
             {
-                try
+                int? lecturerID = HttpContext.Session.GetInt32("LecturerID");
+                if (lecturerID == null) return RedirectToAction("Login", "Home");
+
+                string documentFileName = null;
+                if (documentFile != null && documentFile.Length > 0)
                 {
-                    string uniqueFileName = "No document uploaded";
-                    if (documentFile != null && documentFile.Length > 0)
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+                    Directory.CreateDirectory(uploadsFolder);
+
+                    documentFileName = Guid.NewGuid().ToString() + Path.GetExtension(documentFile.FileName);
+                    var filePath = Path.Combine(uploadsFolder, documentFileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
                     {
-                        string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-                        if (!Directory.Exists(uploadsFolder))
-                            Directory.CreateDirectory(uploadsFolder);
-
-                        uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(documentFile.FileName);
-                        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                        using (var fileStream = new FileStream(filePath, FileMode.Create))
-                            documentFile.CopyTo(fileStream);
+                        documentFile.CopyTo(stream);
                     }
+                }
 
-                    claim.storeClaim(lecturerID.Value, claim.name, claim.sessions, claim.hoursWorked, claim.hourlyRate, uniqueFileName);
-                    ViewBag.Message = "Claim submitted successfully.";
-                }
-                catch (Exception error)
-                {
-                    Console.WriteLine("Unable to submit claim: " + error.Message);
-                }
+                claim.storeClaim(lecturerID.Value, claim.name, claim.sessions, claim.hoursWorked, claim.hourlyRate, documentFileName);
+
+                ViewBag.SuccessMessage = "Claim submitted successfully.";
+
+                // Return a new empty claim object so the form is ready for next submission
+                return View(new Claims_Queries());
             }
-            else
+            catch (Exception ex)
             {
-                ViewBag.Message = "Please fill in all fields correctly.";
+                Console.WriteLine("Error submitting claim: " + ex.Message);
+                ViewBag.ErrorMessage = "Failed to submit claim.";
+                return View(new Claims_Queries());
             }
-
-            return View();
         }
-        public IActionResult ReviewPage()
+        public IActionResult TrackClaim()
         {
-            int? lecturerID = HttpContext.Session.GetInt32("LecturerID");
-            if (lecturerID == null)
+            try
             {
-                try
+                int? lecturerID = HttpContext.Session.GetInt32("LecturerID");
+
+                if (lecturerID == null)
                 {
                     return RedirectToAction("Login", "Home");
                 }
-                catch (Exception error) { 
-                Console.WriteLine("LecturerID not found in session." + error.Message);
-                }
-                    
-            }
 
-            Claims_Queries claim = new Claims_Queries();
-            var claimsList = claim.GetAllClaims(lecturerID.Value);
-            
-            if(claimsList.Count == 0)
-            {
-                ViewBag.Message = "No claims found.";
+                Claims_Queries claimsQueries = new Claims_Queries();
+                List<Claims_Queries> lecturerClaims = claimsQueries.GetClaimsByLecturer(lecturerID.Value);
+
+                if (lecturerClaims == null || lecturerClaims.Count == 0)
+                {
+                    ViewBag.Message = "No claims found.";
+                    return View(new List<Claims_Queries>());
+                }
+
+                return View(lecturerClaims);
             }
-            return View(claimsList);
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error loading lecturer claims: " + ex.Message);
+                ViewBag.Message = "Error retrieving claims.";
+                return View(new List<Claims_Queries>());
+            }
+        }
+        public IActionResult ReviewPage()
+        {
+            try
+            {
+                Claims_Queries claimsQueries = new Claims_Queries();
+                List<Claims_Queries> claims = claimsQueries.GetAllClaims(); // can include pending, approved, rejected
+
+                if (claims == null || claims.Count == 0)
+                {
+                    ViewBag.Message = "No claims found.";
+                    return View(new List<Claims_Queries>());
+                }
+
+                return View(claims);
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine("Error loading Review page: " + error.Message);
+                return View(new List<Claims_Queries>());
+            }
         }
 
+        public IActionResult ApprovePage()
+        {
+            try
+            {
+                Claims_Queries claimsQueries = new Claims_Queries();
+                List<Claims_Queries> claims = claimsQueries.GetAllClaims(); 
+                if (claims == null || claims.Count == 0)
+                {
+                    ViewBag.Message = "No claims found.";
+                    return View(new List<Claims_Queries>());
+                }
+                return View(claims);
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine("Error loading Approve page: " + error.Message);
+                return View(new List<Claims_Queries>());
+            }
+        }
+
+        [HttpPost]
+        public IActionResult UpdateClaimStatus(int claimID, string claimStatus)
+        {
+            try
+            {
+                Claims_Queries claims = new Claims_Queries();
+                claims.ApproveClaim(claimID, claimStatus);
+
+                TempData["SuccessMessage"] = $"Claim {claimID} updated to {claimStatus}.";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error updating claim status: " + ex.Message);
+                TempData["ErrorMessage"] = "Failed to update claim.";
+            }
+
+            return RedirectToAction("ReviewPage","Home");
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

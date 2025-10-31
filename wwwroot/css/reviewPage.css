@@ -52,3 +52,19 @@
         border-radius: 4px;
         border: 1px solid #ccc;
     }
+
+.save-prompt {
+    margin-top: 15px;
+    text-align: center;
+}
+
+    .save-prompt button {
+        color: red;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+        .save-prompt button:hover {
+            text-decoration: underline;
+        }
+

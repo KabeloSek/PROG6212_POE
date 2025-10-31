@@ -4,56 +4,63 @@
 
 <link rel="stylesheet" href="/css/reviewPage.css" />
 
-@if (Model == null)
-{
-    <p>Model is null</p>
-}
-else if (!Model.Any())
+@if (Model == null || !Model.Any())
 {
     <p>No claims found</p>
 }
 else
 {
-    <table class="claims-table">
-        <thead>
-            <tr>
-                <th>ClaimID</th>
-                <th>Name</th>
-                <th>Sessions</th>
-                <th>Hours Worked</th>
-                <th>Hourly Rate</th>
-                <th>Document</th>
-                <th>Claim Status</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @foreach (var claim in Model)
-            {
+    <form asp-action="UpdateClaimStatus" method="post">
+        <table class="claims-table">
+            <thead>
                 <tr>
-                    <td>@claim.claimID</td>
-                    <td>@claim.name</td>
-                    <td>@claim.sessions</td>
-                    <td>@claim.hoursWorked</td>
-                    <td>@claim.hourlyRate</td>
-                    <td>
-                        @if (!string.IsNullOrEmpty(claim.document))
-                        {
-                            <a href="@Url.Content("~/uploads/" + claim.document)" target="_blank">View Document</a>
-                        }
-                        else
-                        {
-                            <span>No document</span>
-                        }
-                    </td>
-                    <td>
-                        <select>
-                            <option value="approve">Approve</option>
-                            <option value="reject">Reject</option>
-                        </select>
-                    </td>
+                    <th>ClaimID</th>
+                    <th>Name</th>
+                    <th>Sessions</th>
+                    <th>Hours Worked</th>
+                    <th>Hourly Rate</th>
+                    <th>Document</th>
+                    <th>Action</th>
+                    <th>Claim Status</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+
+            <tbody>
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            @Model[i].claimID
+                            <input type="hidden" name="claims[@i].claimID" value="@Model[i].claimID" />
+                        </td>
+                        <td>@Model[i].name</td>
+                        <td>@Model[i].sessions</td>
+                        <td>@Model[i].hoursWorked</td>
+                        <td>@Model[i].hourlyRate</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(Model[i].document))
+                            {
+                                <a href="@Url.Content("~/uploads/" + Model[i].document)" target="_blank">View Document</a>
+                            }
+                            else
+                            {
+                                <span>No document</span>
+                            }
+                        </td>
+                        <td>
+                            <select name="claims[@i].claimStatus">
+                                <option value="Approved" selected="@("Approved" == Model[i].claimStatus)">Approve</option>
+                                <option value="Rejected" selected="@("Rejected" == Model[i].claimStatus)">Reject</option>
+                            </select>
+                        </td>
+                        <td>@Model[i].claimStatus</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="save-prompt">
+            <button type="submit" >Submit All</button>
+        </div>
+    </form>
 }

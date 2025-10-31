@@ -43,10 +43,16 @@
         <button type="submit" class="claim-btn">Submit</button>
         
     </div>
-    @if (ViewBag.SuccessMessage != null)
-    {
-        <p style="color:@(ViewBag.Message.Contains("successfully") ? "green":"red");">
-        @ViewBag.Message
-        </p>
-    }
+  @if (ViewBag.SuccessMessage != null)
+{
+    <p style="color:green;">
+        @ViewBag.SuccessMessage
+    </p>
+}
+@if (ViewBag.ErrorMessage != null)
+{
+    <p style="color:red;">
+        @ViewBag.ErrorMessage
+    </p>
+}
 </form>
