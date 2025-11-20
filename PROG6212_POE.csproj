@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="QuestPDF" Version="2025.7.4" />
     <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
+    <PackageReference Include="Wkhtmltopdf.NetCore" Version="3.0.2" />
   </ItemGroup>
 
 </Project>

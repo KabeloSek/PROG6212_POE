@@ -1,0 +1,28 @@
+﻿@model List<PROG6212_POE.Models.LecturerDTO>
+
+<h2>HR Dashboard</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <p style="color:green">@TempData["SuccessMessage"]</p>
+}
+
+<table class="claims-table" style="width:80%; margin:auto;">
+    <thead>
+        <tr><th>ID</th><th>Name</th><th>Email</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var lec in Model)
+        {
+            <tr>
+                <td>@lec.LecturerID</td>
+                <td>@lec.Name @lec.Surname</td>
+                <td>@lec.Email</td>
+                <td>
+                    <a asp-action="EditLecturer" asp-route-lecturerId="@lec.LecturerID">Edit</a> |
+                    <a asp-action="Invoice" asp-route-lecturerId="@lec.LecturerID">Print Invoice</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

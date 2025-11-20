@@ -4,6 +4,7 @@ using PROG6212_POE.Models;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Security.Claims;
+using PROG6212_POE.Utilities;
 
 namespace PROG6212_POE.Controllers
 {
@@ -83,8 +84,17 @@ namespace PROG6212_POE.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Login(Login user)
+        public IActionResult Login(Login user, string email, string password)
         {
+            // Check HR login FIRST
+            if (!string.IsNullOrEmpty(email) &&
+                email.ToLower() == "sekkb@gmail.com" &&
+                password == "PROG6212_HR")
+            {
+                HttpContext.Session.SetString("IsHR", "true");
+                return RedirectToAction(nameof(HRPage));
+            }
+
             if (ModelState.IsValid)
             {
                 Login login = new Login();
@@ -259,6 +269,75 @@ namespace PROG6212_POE.Controllers
 
             return RedirectToAction("ReviewPage","Home");
         }
+
+        [HttpGet]
+        public IActionResult HRPage()
+        {
+            // optional: require HR session
+            if (HttpContext.Session.GetString("IsHR") != "true")
+                return RedirectToAction("Login", "Home");
+
+            var repo = new HR_Queries();
+            var lecturers = repo.GetAllLecturers();
+            return View("HRPage", lecturers); // Views/Home/HRPage.cshtml
+        }
+
+        [HttpGet]
+        public IActionResult EditLecturer(int lecturerId)
+        {
+            if (HttpContext.Session.GetString("IsHR") != "true")
+                return RedirectToAction("Login", "Home");
+
+            var repo = new HR_Queries();
+            var lec = repo.GetLecturerById(lecturerId);
+            if (lec == null) return NotFound();
+            return View("EditLecturer", lec); // Views/Home/EditLecturer.cshtml
+        }
+
+        [HttpPost]
+        public IActionResult EditLecturer(LecturerDTO model)
+        {
+            if (HttpContext.Session.GetString("IsHR") != "true")
+                return RedirectToAction("Login", "Home");
+
+            if (!ModelState.IsValid) return View("EditLecturer", model);
+
+            var repo = new HR_Queries();
+            bool ok = repo.UpdateLecturer(model.LecturerID, model.Name, model.Surname, model.Email);
+            if (!ok)
+            {
+                ViewBag.ErrorMessage = "Update failed.";
+                return View("EditLecturer", model);
+            }
+
+            TempData["SuccessMessage"] = "Lecturer updated.";
+            return RedirectToAction("HRPage");
+        }
+
+        [HttpGet]
+        public IActionResult Invoice(int lecturerId)
+        {
+            if (HttpContext.Session.GetString("IsHR") != "true")
+                return RedirectToAction("Login", "Home");
+
+            var repo = new HR_Queries();
+            var lec = repo.GetLecturerById(lecturerId);
+            if (lec == null) return NotFound();
+
+            var claims = repo.GetApprovedClaimsForLecturer(lecturerId);
+            var invoiceModel = new PROG6212_POE.Models.InvoiceViewModel
+            {
+                Lecturer = lec,
+                ApprovedClaims = claims
+            };
+
+            // generate PDF bytes using QuestPDF utility (next step)
+            byte[] pdfBytes = PdfGenerator.GenerateInvoicePdf(invoiceModel);
+
+            string fileName = $"Invoice_{lec.LecturerID}_{lec.Name}_{lec.Surname}.pdf";
+            return File(pdfBytes, "application/pdf", fileName);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

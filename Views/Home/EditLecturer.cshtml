@@ -1,0 +1,28 @@
+﻿@model PROG6212_POE.Models.LecturerDTO
+
+<h2>Edit Lecturer</h2>
+
+<form asp-action="EditLecturer" method="post">
+    <input type="hidden" asp-for="LecturerID" />
+    <div>
+        <label>Name</label>
+        <input asp-for="Name" />
+    </div>
+    <div>
+        <label>Surname</label>
+        <input asp-for="Surname" />
+    </div>
+    <div>
+        <label>Email</label>
+        <input asp-for="Email" type="email" />
+    </div>
+    <div>
+        <button type="submit">Save</button>
+        <a asp-action="HRPage">Cancel</a>
+    </div>
+
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <p style="color:red">@ViewBag.ErrorMessage</p>
+    }
+</form>
