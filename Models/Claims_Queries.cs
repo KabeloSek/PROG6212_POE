@@ -147,12 +147,13 @@ namespace PROG6212_POE.Models
                 {
                     connect.Open();
                     string query = @"SELECT 
-                    ClaimID,
-                    Name,
+                   ClaimID,
+                   Name,
                     Sessions,
                     HoursWorked,
                     HourlyRate,
-                    Document
+                    Document,
+                    ClaimStatus
                  FROM Claims
                     ";
 
@@ -170,7 +171,8 @@ namespace PROG6212_POE.Models
                                     sessions = Convert.ToInt32(read["Sessions"]),
                                     hoursWorked = Convert.ToInt32(read["HoursWorked"]),
                                     hourlyRate = Convert.ToInt32(read["HourlyRate"]),
-                                    document = read["Document"].ToString()
+                                    document = read["Document"].ToString(),
+                                    claimStatus = read["ClaimStatus"].ToString()
                                 });
                                 
                             }

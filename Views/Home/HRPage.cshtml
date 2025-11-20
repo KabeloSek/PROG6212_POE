@@ -1,16 +1,24 @@
 ﻿@model List<PROG6212_POE.Models.LecturerDTO>
 
-<h2>HR Dashboard</h2>
+<link rel="stylesheet" href="/css/reviewPage.css" />
+
+<h2 style="text-align:center; margin-top:20px;">HR Dashboard</h2>
 
 @if (TempData["SuccessMessage"] != null)
 {
-    <p style="color:green">@TempData["SuccessMessage"]</p>
+    <p style="color:green; text-align:center">@TempData["SuccessMessage"]</p>
 }
 
-<table class="claims-table" style="width:80%; margin:auto;">
+<table class="claims-table">
     <thead>
-        <tr><th>ID</th><th>Name</th><th>Email</th><th>Actions</th></tr>
+        <tr>
+            <th>ID</th>
+            <th>Name & Surname</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
     </thead>
+
     <tbody>
         @foreach (var lec in Model)
         {

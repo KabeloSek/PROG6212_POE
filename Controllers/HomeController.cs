@@ -252,22 +252,26 @@ namespace PROG6212_POE.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateClaimStatus(int claimID, string claimStatus)
+        public IActionResult UpdateClaimStatus(List<Claims_Queries> claims)
         {
             try
             {
-                Claims_Queries claims = new Claims_Queries();
-                claims.ApproveClaim(claimID, claimStatus);
+                Claims_Queries repo = new Claims_Queries();
 
-                TempData["SuccessMessage"] = $"Claim {claimID} updated to {claimStatus}.";
+                foreach (var c in claims)
+                {
+                    repo.ApproveClaim(c.claimID, c.claimStatus);
+                }
+
+                TempData["SuccessMessage"] = "All changes saved.";
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error updating claim status: " + ex.Message);
-                TempData["ErrorMessage"] = "Failed to update claim.";
+                TempData["ErrorMessage"] = "Failed to update claims.";
+                Console.WriteLine(ex.Message);
             }
 
-            return RedirectToAction("ReviewPage","Home");
+            return RedirectToAction("ReviewPage");
         }
 
         [HttpGet]
