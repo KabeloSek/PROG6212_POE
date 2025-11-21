@@ -114,11 +114,11 @@ namespace PROG6212_POE.Controllers
 
                         case "programcoordinator":
                             HttpContext.Session.SetInt32("CoordinatorID", userId);
-                            return RedirectToAction("Review", "Home");
+                            return RedirectToAction("ReviewPage", "Home");
 
                         case "programmanager":
                             HttpContext.Session.SetInt32("ManagerID", userId);
-                            return RedirectToAction("Approve", "Home");
+                            return RedirectToAction("ApprovePage", "Home");
 
                         default:
                             Console.WriteLine("Invalid role specified.");
